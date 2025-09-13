@@ -1,0 +1,45 @@
+1.List each country name where the population is larger than that of 'Russia'.
+ans=SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+
+2.Show the countries in Europe with a per capita GDP greater than 'United Kingdom'.
+ans=select name from world where continent= 'europe' and gdp/population>
+(select gdp/population from world where name='united kingdom')
+
+3.List the name and continent of countries in the continents containing either Argentina or Australia. Order by name of the country.
+ans=select name, continent from world
+ where continent =any(select continent
+ from world where name in ('argentina', 'australia'))order by name;
+
+4.Which country has a population that is more than United Kingdom but less than Germany? Show the name and the population.
+ans=select name , population from world where population>
+(select population from world where name='united kingdom')
+and population<(select population from world where name='Germany')
+
+
+
+6.Which countries have a GDP greater than every country in Europe? [Give the name only.] (Some countries may have NULL gdp values)
+answer=select name from world where gdp >all
+(select gdp from world where continent='europe'
+and gdp is not null)
+
+7.Find the largest country (by area) in each continent, show the continent, the name and the area
+The above example is known as a correlated or synchronized sub-query.
+ans=SELECT continent, name, area FROM world as x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND area>0)
+
+8.List each continent and the name of the country that comes first alphabetically.
+ans=select continent,name from world as w1 where name =
+(select min(name) from world as w2 where w1.continent=w2.continent)
+
+9.select name,continent,population from world
+where continent =any
+(select continent from world group by continent having max(population)<=25000000)
+
+
+
